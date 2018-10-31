@@ -186,7 +186,9 @@ SPOOKY_WORDS = ["halloween",
 
 def main(name):
     """
-    The main function
+    Spookify
+    Generates a spooky version of a provided string, intended for names.
+    See 'spookify' module docstring for more info.
     """
 
     # Convert all strings to lowercase
@@ -242,7 +244,7 @@ def main(name):
 # Don't run automatically if imported as a module
 if __name__ == '__main__':
     # Get a name from the command line, or ask for one
-    if sys.argv:
+    if sys.argv[1:]:
         NAME = ' '.join(sys.argv[1:])
     else:
         NAME = input("Enter your name: ")
