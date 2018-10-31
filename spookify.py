@@ -21,7 +21,7 @@ import string
 
 def levenshtein(string_1, string_2):
     """
-    Calculate the Levenshtein distance between two strings
+    Calculates the Levenshtein distance between two strings
     From
     https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
     (CC-BY-SA)
@@ -47,63 +47,62 @@ def levenshtein(string_1, string_2):
     return v_1[len(string_2)]
 
 
+# A list of spooky words for potential substitutions
 SPOOKY_WORDS = ["halloween",
-                "bat", "bats",
                 "banshee", "banshees",
+                "bat", "bats",
                 "beast", "beastly", "beasts",
+                "bite", "bites", "bitten",
                 "blackcat", "blackcats",
                 "blood", "bloody", "blooded", "bloodcurdling",
-                "bite", "bites", "bitten",
                 "bogeyman", "boogeyman",
                 "bone", "bones", "bonechilling",
-                # "boo",
                 "brains",
                 "broom", "broomstick", "brooms", "broomsticks",
                 "cackle", "cackling",
                 "cadaver", "cadavers",
                 "candle", "candles",
                 "candy", "chocolate",
-                # "cat", "cats",
                 "cauldron", "cauldrons",
                 "cemetery", "cemeteries",
                 "chill", "chills", "chilling",
                 "chocolate",
-                "corpse", "corpses", "corpselike",
-                "costume", "costumed", "costumes",
                 "clown",
                 "cobweb", "cobwebs",
                 "coffin", "coffins",
+                "corpse", "corpses", "corpselike",
+                "costume", "costumed", "costumes",
                 "creature", "creatures",
+                "creep", "creepy", "creeps", "creeping", "creeper",
                 "crow", "crows",
                 "crypt",
-                "creep", "creepy", "creeps", "creeping", "creeper",
                 "darkness",  # "dark",
                 "dead", "death", "deathly", "deadly",
-                "dying",  # "die",
-                "disguise", "disguised", "discuises",
                 "demon", "demons", "demonic",
                 "devil", "devils", "devilish",
+                "disguise", "disguised", "discuises",
+                "doom", "doomed",
                 "dracula",
                 "dread", "dreadful", "dreaded",
-                "doom", "doomed",
+                "dying",  # "die",
                 "eerie",
                 "evil",
                 "eyeball", "eyeballs",
                 "fang", "fangs",
                 "fear", "fearful",
-                "fullmoon",
                 "fright", "frighten", "frightening", "frightened", "frightful",
+                "fullmoon",
                 "ghast", "ghastly",
                 "ghost", "ghosts", "ghostly",
                 "ghoul", "ghouls", "ghoulish",
                 "gore", "gory", "gored",
-                "guts",
-                "gruesome",
                 "grave", "gravestone", "graves", "gravestones", "graveyard",
                 "graveyards",
                 "grim", "grimreaper",
                 "grisly",
                 "gruesome",
+                "gruesome",
+                "guts",
                 "hair-raising",
                 "hallow", "hallows",
                 "haunt", "haunted", "haunting", "haunted-house",
@@ -112,38 +111,37 @@ SPOOKY_WORDS = ["halloween",
                 "hearse", "hearses",
                 "hell", "hellish", "hellhound", "hellcat",
                 "horror", "horrific", "horrify", "horrifying", "horrible",
-                # "hide",
                 "howl", "howling",
                 "intestines",
                 "jackolantern",
                 "lantern",
-                "living-dead",
                 "lightning",
+                "living-dead",
                 "macabre",
                 "mausoleum", "mausoleums",
-                "monster", "monsters", "monstrous",
                 "midnight",
+                "monster", "monsters", "monstrous",
                 "moonlight", "moonlit",  # "moon",
                 "morbid",
                 "mummy",
                 "night", "nightmare", "nighttime",
                 "noose",
                 "occult",
-                "owl",
                 "october",
-                "ominous",
                 "ogre", "ogres",
+                "ominous",
+                "owl",
                 "petrify", "petrified", "petrifying",
                 "phantom", "phantoms", "phantasm", "phantasms",
-                "possessed",
                 "pitchfork",
                 "poltergeist", "poltergeists",
+                "possessed",
                 "potion", "potions",
                 "pumpkin", "pumpkins",
                 "raven", "ravens",
                 "reaper",
-                "revolting", "revolted",
                 "repulsive", "repulsed",
+                "revolting", "revolted",
                 "risen",
                 "scare", "scary", "scared", "scarecrow",
                 "scream", "screams", "screaming",
@@ -162,10 +160,10 @@ SPOOKY_WORDS = ["halloween",
                 "supernatural",
                 "sweets",
                 "terror", "terrible", "terrifying", "terrified",
-                "trembling", "tremble",
                 "thrill", "thrilling",
                 "thunder",
                 "tomb", "tombstone", "tombs", "tombstones",
+                "trembling", "tremble",
                 "trick", "treat", "trickortreat", "tricks", "treats",
                 "troll", "trolls",
                 "undead", "undying",
@@ -173,25 +171,23 @@ SPOOKY_WORDS = ["halloween",
                 "unnerving", "unnerved",
                 "vampire", "vampires", "vampiric",
                 "warlock", "warlocks",
-                # "web", "webs",
                 "weird",
                 "werewolf", "werewolves", "wolf", "wolves", "wolfman",
                 "wicked",
                 "witch", "witches", "witchcraft", "witchy",
                 "wizard", "wizards", "wizardry",
                 "wraith", "wraiths",
+                # "boo",
+                # "cat", "cats",
+                # "hide",
+                # "web", "webs",
                 "zombie", "zombies"]
 
 
-def main():
+def main(name):
     """
     The main function
     """
-    # Get a name from the command line, or ask for one
-    if sys.argv:
-        name = ' '.join(sys.argv[1:])
-    else:
-        name = input("Enter your name: ")
 
     # Convert all strings to lowercase
     name = name.lower()
@@ -229,19 +225,26 @@ def main():
                     best_sub = (name_part, spooky_word)
 
         # Substitute the relevant substring, delimited by hyphens
-        if min_levenshtein < len(word) + 1:
+        if new_word:
             new_word = word.replace(best_sub[0], "-"+best_sub[1]+"-")
-        # But remove the hyphens at word boundaries
-        if new_word[0] == '-':
-            new_word = new_word[1:]
-        if new_word[-1] == '-':
-            new_word = new_word[:-1]
+            # But remove the hyphens at word boundaries
+            if new_word[0] == '-':
+                new_word = new_word[1:]
+            if new_word[-1] == '-':
+                new_word = new_word[:-1]
 
         # Add this word to the name
         new_name = new_name + " " + new_word
 
-    print(string.capwords(new_name))
+    return string.capwords(new_name)
 
 
+# Don't run automatically if imported as a module
 if __name__ == '__main__':
-    main()
+    # Get a name from the command line, or ask for one
+    if sys.argv:
+        NAME = ' '.join(sys.argv[1:])
+    else:
+        NAME = input("Enter your name: ")
+
+    print(main(NAME))
