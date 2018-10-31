@@ -7,8 +7,8 @@ Halloween name generator
 Usage:
     ./spookify.py <name>
 
-Spookifies all words over 4 characters.
-To force a match for words shorter than 4 characters, append some dots or
+Spookifies all words over 3 characters.
+To force a match for words shorter than 3 characters, append some dots or
 something.
 """
 
@@ -197,7 +197,7 @@ def main():
 
     # For each word in the name...
     for word in name.split():
-        if len(word) <= 3:
+        if len(word) < 3:
             new_name = new_name + " " + word
             continue
 
