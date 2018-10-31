@@ -9,7 +9,7 @@ algorithm.
 ## Examples:
 * George Watson ⇒ Gore Bats-on
 * Dave Jones ⇒ Grave Bones
-* Richard Stallman ⇒ Ri-fear-d Skull-man
+* Richard Stallman ⇒ Witch-ard Skull-man
 * Donald Trump ⇒ Bone-ld Grim-p
 * Theresa May ⇒ T-ogres-a May
 * Albus Dumbledore ⇒ Al-bat Dumble-gore
