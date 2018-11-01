@@ -10,9 +10,9 @@ algorithm.
 * George Watson ⇒ Gore Bats-on
 * Dave Jones ⇒ Grave Bones
 * Richard Stallman ⇒ Witch-ard Skull-man
-* Donald Trump ⇒ Bone-ld Grim-p
-* Theresa May ⇒ T-ogres-a May
-* Albus Dumbledore ⇒ Al-bat Dumble-gore
+* Donald Trump ⇒ Doom-ld Grim-p
+* Theresa May ⇒ T-hearses-a Bat
+* Albus Dumbledore ⇒ Al-guts Dumble-gore
 * Engineering and Physical Sciences Research Council ⇒ Engin-eerie-g And
   Physi-owl Scare-nces Re-fear-ch Clown-cil
 
