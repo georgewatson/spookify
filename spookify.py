@@ -24,8 +24,10 @@ def levenshtein(string_1, string_2):
     Calculates the Levenshtein distance between two strings
     From
     https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
-    (CC-BY-SA)
+    (CC-BY-SA 3.0, relicensed to CC-BY-SA 4.0 and GPL)
     """
+    # TODO: Find or write an MIT-compatible implementation of levenshtein()
+    # MIT is bae
     if string_1 == string_2:
         return 0
     elif not string_1:
@@ -57,6 +59,7 @@ SPOOKY_WORDS = ["halloween",
                 "blood", "bloody", "blooded", "bloodcurdling",
                 "bogeyman", "boogeyman",
                 "bone", "bones", "bonechilling",
+                "boo",
                 "brains",
                 "broom", "broomstick", "brooms", "broomsticks",
                 "cackle", "cackling",
@@ -76,7 +79,7 @@ SPOOKY_WORDS = ["halloween",
                 "creep", "creepy", "creeps", "creeping", "creeper",
                 "crow", "crows",
                 "crypt",
-                "darkness",  # "dark",
+                "dark", "darkness",
                 "dead", "death", "deathly", "deadly",
                 "demon", "demons", "demonic",
                 "devil", "devils", "devilish",
@@ -110,6 +113,7 @@ SPOOKY_WORDS = ["halloween",
                 "headstone", "headstones",
                 "hearse", "hearses",
                 "hell", "hellish", "hellhound", "hellcat",
+                "hide",
                 "horror", "horrific", "horrify", "horrifying", "horrible",
                 "howl", "howling",
                 "intestines",
@@ -171,16 +175,13 @@ SPOOKY_WORDS = ["halloween",
                 "unnerving", "unnerved",
                 "vampire", "vampires", "vampiric",
                 "warlock", "warlocks",
+                "web", "webs",
                 "weird",
                 "werewolf", "werewolves", "wolf", "wolves", "wolfman",
                 "wicked",
                 "witch", "witches", "witchcraft", "witchy",
                 "wizard", "wizards", "wizardry",
                 "wraith", "wraiths",
-                # "boo",
-                # "cat", "cats",
-                # "hide",
-                # "web", "webs",
                 "zombie", "zombies"]
 
 
@@ -194,6 +195,11 @@ def main(name):
     # Convert all strings to lowercase
     name = name.lower()
     new_name = ""
+
+    # Randomly shuffle the spooky words for variety, then sort by length to
+    # encourage longer substitutions
+    random.shuffle(SPOOKY_WORDS)
+    SPOOKY_WORDS.sort(key=len, reverse=True)
 
     # For each word in the name...
     for word in name.split():
@@ -217,14 +223,15 @@ def main(name):
 
         # Compare each substring to each spooky word
         for name_part in substrings:
-            random.shuffle(SPOOKY_WORDS)
             for spooky_word in SPOOKY_WORDS:
-                # Record the best match found so far
-                this_levenshtein = levenshtein(spooky_word, name_part)
-                # Strictly less-than to encourage longer subs
-                if this_levenshtein < min_levenshtein:
-                    min_levenshtein = this_levenshtein
-                    best_sub = (name_part, spooky_word)
+                # Don't make the word shorter
+                if len(spooky_word) >= len(name_part):
+                    # Record the best match found so far
+                    this_levenshtein = levenshtein(spooky_word, name_part)
+                    # Strictly less-than to encourage longer subs
+                    if this_levenshtein < min_levenshtein:
+                        min_levenshtein = this_levenshtein
+                        best_sub = (name_part, spooky_word)
 
         # Substitute the relevant substring, delimited by hyphens
         if new_word:
