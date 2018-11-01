@@ -15,7 +15,7 @@ Spookifies all words of 3 or more characters.
 To force a match for words shorter than 3 characters, append some dots or
 something.
 
-Dependancies:
+Dependencies:
     random
     string
     sys
@@ -42,8 +42,6 @@ and should have no side effects.
 However, Spookify is not at present packaged as a formal module and is provided
 as-is without any guarantee of safety or fitness for purpose.
 """
-
-# pylint: disable=consider-using-enumerate
 
 import random
 import string
@@ -122,12 +120,12 @@ def levenshtein(string1, string2):
     row1 = range(len(row1))
 
     # Calculate distances from previous row
-    for i in range(len(string1)):
+    for i, _ in enumerate(string1):
         # First element is empty string2, so use length again
         row2[0] = i + 1
 
         # Calculate the minimum cost
-        for j in range(len(string2)):
+        for j, _ in enumerate(string2):
             row2[j+1] = min(row2[j] + 1,
                             row1[j+1] + 1,
                             row1[j] + (0 if string1[i] == string2[j] else 1))
