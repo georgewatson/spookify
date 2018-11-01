@@ -19,35 +19,41 @@ import sys
 import string
 
 
-def levenshtein(string_1, string_2):
+def levenshtein(string1, string2):
     """
     Calculates the Levenshtein distance between two strings
-    From
-    https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
-    (CC-BY-SA 3.0, relicensed to CC-BY-SA 4.0 and GPL)
+    See https://en.wikipedia.org/wiki/Levenshtein_distance
     """
-    # TODO: Find or write an MIT-compatible implementation of levenshtein()
-    # Then relicense as MIT
-    # MIT is bae
-    if string_1 == string_2:
-        return 0
-    elif not string_1:
-        return len(string_2)
-    elif not string_2:
-        return len(string_1)
-    v_0 = [None] * (len(string_2) + 1)
-    v_1 = [None] * (len(string_2) + 1)
-    for i in range(len(v_0)):
-        v_0[i] = i
-    for i in range(len(string_1)):
-        v_1[0] = i + 1
-        for j in range(len(string_2)):
-            cost = 0 if string_1[i] == string_2[j] else 1
-            v_1[j + 1] = min(v_1[j] + 1, v_0[j + 1] + 1, v_0[j] + cost)
-        for j in range(len(v_0)):
-            v_0[j] = v_1[j]
+    # Only the last two rows of the matrix are actually necessary
+    row1 = [None] * (len(string2) + 1)
+    row2 = [None] * (len(string2) + 1)
 
-    return v_1[len(string_2)]
+    # Fill in row1 with the distance from an empty string1 (the length)
+    for i in range(len(row1)):
+        row1[i] = i
+
+    # Calculate distances from previous row
+    for i in range(len(string1)):
+        # First element is empty string2, so use length again
+        row2[0] = i + 1
+
+        for j in range(len(string2)):
+            # Calculate costs
+            insertions = row2[j] + 1
+            deletions = row1[j+1] + 1
+            if string1[i] == string2[j]:
+                substitutions = row1[j]
+            else:
+                substitutions = row1[j] + 1
+
+            # Find the smallest number of modifications
+            row2[j+1] = min(insertions, deletions, substitutions)
+
+        # Move down a row and repeat
+        row1 = row2.copy()
+
+    # Result is the last element of row1
+    return row1[-1]
 
 
 # A list of spooky words for potential substitutions
@@ -84,7 +90,8 @@ SPOOKY_WORDS = ["halloween",
                 "crypt",
                 "dark", "darkness",
                 "dead", "death", "deathly", "deadly",
-                "demon", "demons", "demonic",
+                "demon", "demons", "demonic", "dementor", "dementors",
+                "demented",
                 "devil", "devils", "devilish",
                 "disguise", "disguised", "disguises",
                 "doom", "doomed",
@@ -99,7 +106,7 @@ SPOOKY_WORDS = ["halloween",
                 "frankenstein",
                 "fright", "frighten", "frightening", "frightened", "frightful",
                 "fullmoon",
-                "ghast", "ghastly",
+                "ghast", "ghasts", "ghastly",
                 "ghost", "ghosts", "ghostly",
                 "ghoul", "ghouls", "ghoulish",
                 "gore", "gory", "gored",
@@ -107,7 +114,6 @@ SPOOKY_WORDS = ["halloween",
                 "graveyards",
                 "grim", "grimreaper",
                 "grisly",
-                "gruesome",
                 "gruesome",
                 "guts",
                 "hairraising",
@@ -123,7 +129,6 @@ SPOOKY_WORDS = ["halloween",
                 "intestines",
                 "jackolantern",
                 "lantern",
-                "lair",
                 "lightning",
                 "livingdead",
                 "macabre",
@@ -154,6 +159,7 @@ SPOOKY_WORDS = ["halloween",
                 "risen",
                 "scare", "scary", "scared", "scarecrow",
                 "scream", "screams", "screaming",
+                "sever", "severed",
                 "shadow", "shadows", "shadowy",
                 "shock", "shocked", "shocking",
                 "skeleton", "skeletons", "skeletal",
