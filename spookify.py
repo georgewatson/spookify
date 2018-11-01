@@ -3,19 +3,37 @@
 """
 SPOOKIFY
 Halloween name generator
+<https://github.com/georgewatson/spookify>
+
+George Watson, 2018
+Available under an MIT licence (see LICENSE)
 
 Usage:
     ./spookify.py <name>
 
-Spookifies all words over 3 characters.
+Spookifies all words of 3 or more characters.
 To force a match for words shorter than 3 characters, append some dots or
 something.
 
-Provides the following components:
+Dependancies:
+    random
+    string
+    sys
+
+Provides the following functions:
     main(name)
         Returns a spookified Halloween version of the string 'name'
+
+    best_substitution(word, possible_subs)
+        Performs the best substitution of a member of possible_subs into word
+    is_anagram(string1, string2)
+        Determines whether two strings contain the exact same characters
     levenshtein(string1, string2)
         Calculates the Levenshtein distance between two strings
+    score_substitution(word_part, possible_sub)
+        Scores the desirability of replacing word_part with possible_sub
+
+Global variables:
     SPOOKY_WORDS
         A list of spooky words
 
@@ -28,8 +46,64 @@ as-is without any guarantee of safety or fitness for purpose.
 # pylint: disable=consider-using-enumerate
 
 import random
-import sys
 import string
+import sys
+
+
+def best_substitution(word, possible_subs):
+    """
+    Finds the best possible substitution in a given word,
+    and returns the modified word
+    """
+    # Skip short words
+    ignored_words = ['and', 'for', 'the']
+    if len(word) < 3 or word in ignored_words:
+        return word
+
+    # Get all substrings of length >= 3
+    substrings = [word[i:j+1]
+                  for i in range(len(word) - 2)
+                  for j in range(i+2, len(word))]
+
+    # Sort by length to encourage longer substitutions
+    random.shuffle(substrings)
+    substrings.sort(key=len, reverse=True)
+
+    # Find the best spooky substitution
+    best_sub = min([(name_part,
+                     substitution,
+                     score_substitution(name_part, substitution))
+                    for name_part in substrings
+                    for substitution in possible_subs],
+                   key=lambda t: t[2])
+
+    # Substitute the relevant substring, delimited by hyphens
+    word = word.replace(best_sub[0], "-"+best_sub[1]+"-")
+    # But remove the hyphens at word boundaries
+    if word[0] == '-':
+        word = word[1:]
+    if word[-1] == '-':
+        word = word[:-1]
+
+    # Return the result
+    return word
+
+
+def is_anagram(string1, string2):
+    """
+    Checks whether two strings contain the same characters
+    Returns True if so, else False
+    """
+    # Strings of different lengths can't be anagrams
+    if len(string1) != len(string2):
+        return False
+
+    characters1 = list(string1)
+    characters2 = list(string2)
+    characters1.sort()
+    characters2.sort()
+
+    return characters1 == characters2
 
 
 def levenshtein(string1, string2):
@@ -61,25 +135,8 @@ def levenshtein(string1, string2):
         # Move down a row and repeat
         row1 = row2.copy()
 
-    # Result is the last element of row1
-    return row1[-1]
-
-
-def is_anagram(string1, string2):
-    """
-    Checks whether two strings contain the same characters
-    Returns True if so, else False
-    """
-    # Strings of different lengths can't be anagrams
-    if len(string1) != len(string2):
-        return False
-
-    characters1 = list(string1)
-    characters2 = list(string2)
-    characters1.sort()
-    characters2.sort()
-
-    return characters1 == characters2
+    # Result is the last element of the matrix
+    return row2[-1]
 
 
 def score_substitution(word_part, possible_sub):
@@ -91,9 +148,10 @@ def score_substitution(word_part, possible_sub):
         Substitutions that make the word shorter are never accepted
             (they score word_length + 1, worse than any other substitution)
         Other substitutions are given a score equal to their Levenshtein
-            distance divided by the length of the word
+            distance divided by the length of the substitution
     """
     # If the words are the same, no substitution is needed
+    # Give the best possible score (-1)
     if possible_sub == word_part:
         return -1
 
@@ -101,52 +159,13 @@ def score_substitution(word_part, possible_sub):
     if len(possible_sub) < len(word_part):
         return len(word_part) + 1
 
-    # Accept anagrams immediately
+    # Anagrams are second-best; give them zero
     if is_anagram(word_part, possible_sub):
         return 0
 
     # Otherwise, check the Levenshtein distance
     # Divide by length to encourage longer subs
     return levenshtein(possible_sub, word_part) / len(possible_sub)
-
-
-def best_substitution(word, possible_subs):
-    """
-    Finds the best possible substitution in a given word,
-    and returns the modified word
-    """
-    # Skip short words
-    ignored_words = ['and', 'for', 'the']
-    if len(word) < 3 or word in ignored_words:
-        return word
-
-    # Get all substrings of length >= 3
-    substrings = [word[i:j+1]
-                  for i in range(len(word) - 2)
-                  for j in range(i+2, len(word))]
-
-    # Sort by length to encourage longer substitutions
-    random.shuffle(substrings)
-    substrings.sort(key=len, reverse=True)
-
-    # Find the best spooky substitution
-    best_sub = min([(name_part,
-                     substitution,
-                     score_substitution(name_part, substitution))
-                    for name_part in substrings
-                    for substitution in possible_subs],
-                   key=lambda t: t[2])
-
-    # Substitute the relevant substring, delimited by hyphens
-    new_word = word.replace(best_sub[0], "-"+best_sub[1]+"-")
-    # But remove the hyphens at word boundaries
-    if new_word[0] == '-':
-        new_word = new_word[1:]
-    if new_word[-1] == '-':
-        new_word = new_word[:-1]
-
-    # Return the result
-    return new_word
 
 
 # A list of spooky words for potential substitutions
