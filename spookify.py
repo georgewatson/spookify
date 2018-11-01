@@ -203,11 +203,11 @@ def main(name):
 
     # For each word in the name...
     for word in name.split():
-        if len(word) < 3:
+        if len(word) < 3 or word in ['and', 'for', 'the']:
             new_name = new_name + " " + word
             continue
 
-        min_levenshtein = len(word) + 1
+        min_score = len(word) + 1
         new_word = word
         best_sub = ()
 
@@ -228,9 +228,10 @@ def main(name):
                 if len(spooky_word) >= len(name_part):
                     # Record the best match found so far
                     this_levenshtein = levenshtein(spooky_word, name_part)
+                    this_score = this_levenshtein / len(spooky_word)
                     # Strictly less-than to encourage longer subs
-                    if this_levenshtein < min_levenshtein:
-                        min_levenshtein = this_levenshtein
+                    if this_score < min_score:
+                        min_score = this_score
                         best_sub = (name_part, spooky_word)
 
         # Substitute the relevant substring, delimited by hyphens
@@ -257,3 +258,5 @@ if __name__ == '__main__':
         NAME = input("Enter your name: ")
 
     print(main(NAME))
+
+# eof
