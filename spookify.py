@@ -151,7 +151,7 @@ def score_substitution(word_part, possible_sub):
             (they score word_length + 1, worse than any other substitution)
         Other substitutions are given a score equal to their Levenshtein
             distance divided by the length of the substitution
-        Anagrams are scored as equal to a single-character edit
+        Anagrams score half, so character swaps are sort-of treated as 1 edit
     """
     # If the words are the same, no substitution is needed
     if possible_sub == word_part:
@@ -161,9 +161,10 @@ def score_substitution(word_part, possible_sub):
     if len(possible_sub) < len(word_part):
         return len(word_part) + 1
 
-    # Favour anagrams - score the same as single-character edits
+    # Favour anagrams by halving their score
+    # Effectively treats a character swap as a single edit
     if is_anagram(word_part, possible_sub):
-        return 1 / len(possible_sub)
+        return levenshtein(possible_sub, word_part) / (2 * len(possible_sub))
 
     # Otherwise, check the Levenshtein distance
     # Divide by length to encourage longer subs
@@ -172,7 +173,6 @@ def score_substitution(word_part, possible_sub):
 
 # A list of spooky words for potential substitutions
 SPOOKY_WORDS = ["halloween",
-                "axe", "axes", "axewound",
                 "banshee", "banshees",
                 "bat", "bats",
                 "beast", "beastly", "beasts",
