@@ -17,6 +17,7 @@ something.
 
 Dependencies:
     random
+    regex
     string
     sys
 
@@ -49,6 +50,7 @@ as-is without any guarantee of safety or fitness for purpose.
 import random
 import string
 import sys
+import regex as re
 
 
 def best_substitution(word, possible_subs):
@@ -83,10 +85,7 @@ def best_substitution(word, possible_subs):
     # Substitute the relevant substring, delimited by hyphens
     word = word.replace(best_sub[0], "-"+best_sub[1]+"-")
     # But remove the hyphens at word boundaries
-    if word[0] == '-':
-        word = word[1:]
-    if word[-1] == '-':
-        word = word[:-1]
+    word = re.sub(r'^-|-$', "", word)
 
     # Return the result
     return word
@@ -143,7 +142,7 @@ def score_substitution(word_part, possible_sub):
     Determines the score of a substitution (lower is better)
     Criteria:
         Identical words score 0
-        Other substitutions are given a score equal to their Levenshtein
+        Substitutions are given a score equal to their Levenshtein
             distance divided by the length of the substitution
         Anagrams score half, so character swaps are sort-of treated as 1 edit
     """
@@ -183,6 +182,7 @@ SPOOKY_WORDS = ["halloween",
                 "cadaver", "cadavers",
                 "candle", "candles",
                 "candy", "chocolate",
+                "casper",
                 "cauldron", "cauldrons",
                 "cemetery", "cemeteries",
                 "chill", "chills", "chilling",
