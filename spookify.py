@@ -98,15 +98,11 @@ def is_anagram(string1, string2):
     Returns True if so, else False
     """
     # Strings of different lengths can't be anagrams
+    # so we might as well avoid sorting them
     if len(string1) != len(string2):
         return False
 
-    characters1 = list(string1)
-    characters2 = list(string2)
-    characters1.sort()
-    characters2.sort()
-
-    return characters1 == characters2
+    return sorted(string1) == sorted(string2)
 
 
 def levenshtein(string1, string2):
@@ -153,6 +149,8 @@ def score_substitution(word_part, possible_sub):
             distance divided by the length of the substitution
         Anagrams score half, so character swaps are sort-of treated as 1 edit
     """
+    # TODO: Consider Damerau-Levenshtein
+
     # If the words are the same, no substitution is needed
     if possible_sub == word_part:
         return 0
