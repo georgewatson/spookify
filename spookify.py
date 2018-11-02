@@ -143,21 +143,17 @@ def score_substitution(word_part, possible_sub):
     Determines the score of a substitution (lower is better)
     Criteria:
         Identical words score 0
-        Substitutions that make the word shorter are never accepted
-            (they score word_length + 1, worse than any other substitution)
         Other substitutions are given a score equal to their Levenshtein
             distance divided by the length of the substitution
         Anagrams score half, so character swaps are sort-of treated as 1 edit
     """
     # TODO: Consider Damerau-Levenshtein
+    # This counts transposition of adjacent characters as 1 edit,
+    # capturing the "best" anagrams and also giving near-anagrams a boost
 
     # If the words are the same, no substitution is needed
     if possible_sub == word_part:
         return 0
-
-    # Don't make the word shorter
-    if len(possible_sub) < len(word_part):
-        return len(word_part) + 1
 
     # Favour anagrams by halving their score
     # Effectively treats a character swap as a single edit
