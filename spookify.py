@@ -21,10 +21,11 @@ Dependencies:
     sys
 
 Provides the following functions:
-    main(name)
+    spookify(name)*
+        The main function
         Returns a spookified Halloween version of the string 'name'
 
-    best_substitution(word, possible_subs)
+    best_substitution(word, possible_subs)*
         Performs the best substitution of a member of possible_subs into word
     is_anagram(string1, string2)
         Determines whether two strings contain the exact same characters
@@ -32,6 +33,8 @@ Provides the following functions:
         Calculates the Levenshtein distance between two strings
     score_substitution(word_part, possible_sub)
         Scores the desirability of replacing word_part with possible_sub
+
+    (Functions marked * include randomness)
 
 Global variables:
     SPOOKY_WORDS
@@ -52,6 +55,7 @@ def best_substitution(word, possible_subs):
     """
     Finds the best possible substitution in a given word,
     and returns the modified word
+    In the case of a tie, modifications are chosen at random
     """
     # Skip short words
     ignored_words = ['and', 'for', 'the']
@@ -64,6 +68,7 @@ def best_substitution(word, possible_subs):
                   for j in range(i+2, len(word))]
 
     # Sort by length to encourage longer substitutions
+    # Technically impure, but who cares?
     random.shuffle(substrings)
     substrings.sort(key=len, reverse=True)
 
@@ -113,53 +118,52 @@ def levenshtein(string1, string2):
     See <https://en.wikipedia.org/wiki/Levenshtein_distance>
     """
     # Only two rows of the matrix are actually necessary
-    row1 = [None] * (len(string2) + 1)
-    row2 = [None] * (len(string2) + 1)
+    prev_row = [None] * (len(string2) + 1)
+    this_row = [None] * (len(string2) + 1)
 
-    # Fill in row1 with the distance from an empty string1 (the length)
-    row1 = range(len(row1))
+    # Fill in prev_row with the distance from an empty string1 (the length)
+    prev_row = range(len(prev_row))
 
     # Calculate distances from previous row
-    for i, _ in enumerate(string1):
+    for i, char1 in enumerate(string1):
         # First element is empty string2, so use length again
-        row2[0] = i + 1
+        this_row[0] = i + 1
 
         # Calculate the minimum cost
-        for j, _ in enumerate(string2):
-            row2[j+1] = min(row2[j] + 1,
-                            row1[j+1] + 1,
-                            row1[j] + (0 if string1[i] == string2[j] else 1))
+        for j, char2 in enumerate(string2):
+            this_row[j+1] = min(this_row[j] + 1,
+                                prev_row[j+1] + 1,
+                                prev_row[j] + (0 if char1 == char2 else 1))
 
         # Move down a row and repeat
-        row1 = row2.copy()
+        prev_row = this_row.copy()
 
     # Result is the last element of the matrix
-    return row2[-1]
+    return this_row[-1]
 
 
 def score_substitution(word_part, possible_sub):
     """
     Determines the score of a substitution (lower is better)
     Criteria:
-        Identical words score -1
-        Anagrams score         0
+        Identical words score 0
         Substitutions that make the word shorter are never accepted
             (they score word_length + 1, worse than any other substitution)
         Other substitutions are given a score equal to their Levenshtein
             distance divided by the length of the substitution
+        Anagrams are scored as equal to a single-character edit
     """
     # If the words are the same, no substitution is needed
-    # Give the best possible score (-1)
     if possible_sub == word_part:
-        return -1
+        return 0
 
     # Don't make the word shorter
     if len(possible_sub) < len(word_part):
         return len(word_part) + 1
 
-    # Anagrams are second-best; give them zero
+    # Favour anagrams - score the same as single-character edits
     if is_anagram(word_part, possible_sub):
-        return 0
+        return 1 / len(possible_sub)
 
     # Otherwise, check the Levenshtein distance
     # Divide by length to encourage longer subs
@@ -308,7 +312,7 @@ SPOOKY_WORDS = ["halloween",
                 "zombie", "zombies"]
 
 
-def main(name):
+def spookify(name):
     """
     Spookify
     Generates a spooky version of a provided string, intended for names.
@@ -318,14 +322,18 @@ def main(name):
     # Convert strings to lowercase
     name = name.lower()
 
+    # Copy the word list to avoid side effects
+    word_list = SPOOKY_WORDS.copy()
+
     # Randomly shuffle the spooky words for variety,
     # then sort by length to encourage longer substitutions
-    random.shuffle(SPOOKY_WORDS)
-    SPOOKY_WORDS.sort(key=len, reverse=True)
+    # Technically impure, but who cares?
+    random.shuffle(word_list)
+    word_list.sort(key=len, reverse=True)
 
     # Construct a new name by applying the best substitution to each word
-    new_name = " ".join([best_substitution(word, SPOOKY_WORDS)
-                         for word in name.split()])
+    new_name = " ".join([best_substitution(name_word, word_list)
+                         for name_word in name.split()])
 
     return string.capwords(new_name)
 
@@ -338,6 +346,6 @@ if __name__ == '__main__':
     else:
         NAME = input("Enter your name: ")
 
-    print(main(NAME))
+    print(spookify(NAME))
 
 # eof

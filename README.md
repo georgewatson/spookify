@@ -11,7 +11,7 @@ algorithm.
 * Dave Jones ⇒ Grave Bones
 * Richard Stallman ⇒ Witch-ard Skull-man
 * Donald Trump ⇒ Demon-ald Grim-p
-* Theresa May ⇒ T-hearses-a Mummy
+* Theresa May ⇒ T-hearse Mummy
 * Albus Dumbledore ⇒ Al-guts Dumble-gore
 * Engineering and Physical Sciences Research Council ⇒ Engin-eerie-g And
   Phy-spectral S-risen-ces Re-fear-ch Clown-cil
