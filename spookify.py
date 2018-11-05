@@ -16,10 +16,16 @@ To force a match for words shorter than 3 characters, append some dots or
 something.
 
 Dependencies:
+- Standard:
+    json
     random
     regex
     string
     sys
+
+- Third-party:
+    pyxdameraulevenshtein <https://pypi.org/project/pyxDamerauLevenshtein/>
+        Available through pip (pip install pyxDamerauLevenshtein)
 
 Provides the following functions:
     spookify(name)*
@@ -47,11 +53,14 @@ However, Spookify is not at present packaged as a formal module and is provided
 as-is without any guarantee of safety or fitness for purpose.
 """
 
+# pylint: disable=c-extension-no-member
+
 import json
 import random
 import string
 import sys
 import regex as re
+import pyxdameraulevenshtein
 
 
 def best_substitution(word, possible_subs):
@@ -59,6 +68,8 @@ def best_substitution(word, possible_subs):
     Finds the best possible substitution in a given word,
     and returns the modified word
     In the case of a tie, modifications are chosen at random
+
+    Note: This function has a random element
     """
     # Skip short words
     ignored_words = ['and', 'for', 'the']
@@ -113,6 +124,8 @@ def levenshtein(string1, string2):
     other.
     See <https://en.wikipedia.org/wiki/Levenshtein_distance>
     """
+    # This function is no longer used, but is retained anyway
+
     # Only two rows of the matrix are actually necessary
     # Fill in prev_row with the distance from an empty string1 (the length)
     prev_row = range(len(string2) + 1)
@@ -126,8 +139,9 @@ def levenshtein(string1, string2):
 
         # Calculate the minimum cost
         for j, char2 in enumerate(string2):
-            this_row[j+1] = min(this_row[j] + 1,
-                                prev_row[j+1] + 1,
+            this_row[j+1] = min(this_row[j] + 1,  # Insertions
+                                prev_row[j+1] + 1,  # Deletions
+                                # Substitutions
                                 prev_row[j] + (0 if char1 == char2 else 1))
 
         # Move down a row and repeat
@@ -142,26 +156,19 @@ def score_substitution(word_part, possible_sub):
     Determines the score of a substitution (lower is better)
     Criteria:
         Identical words score 0
-        Substitutions are given a score equal to their Levenshtein
-            distance divided by the length of the substitution
-        Anagrams score half, so character swaps are sort-of treated as 1 edit
+        Substitutions are given a score equal to their normalize
+            Damerau-Levenshtein distance
+            (the number of insertions, deletions, substitutions &
+            transpositions, divided by the length of the substitution)
     """
-    # TODO: Consider Damerau-Levenshtein
-    # This counts transposition of adjacent characters as 1 edit,
-    # capturing the "best" anagrams and also giving near-anagrams a boost
-
     # If the words are the same, no substitution is needed
+    # Avoid expensive operations
     if possible_sub == word_part:
         return 0
 
-    # Favour anagrams by halving their score
-    # Effectively treats a character swap as a single edit
-    if is_anagram(word_part, possible_sub):
-        return levenshtein(possible_sub, word_part) / (2 * len(possible_sub))
-
-    # Otherwise, check the Levenshtein distance
-    # Divide by length to encourage longer subs
-    return levenshtein(possible_sub, word_part) / len(possible_sub)
+    # Otherwise, check the normalised Damerau-Levenshtein distance
+    return pyxdameraulevenshtein.normalized_damerau_levenshtein_distance(
+        possible_sub, word_part)
 
 
 def spookify(name):
@@ -170,13 +177,18 @@ def spookify(name):
     Generates a spooky version of a provided string, intended for names.
     This acts as the main function for the 'spookify' module.
     See 'spookify' module docstring for more info.
+
+    Note: This function takes input from the file 'spooky_words.json', and
+    has random elements.
     """
 
     # Convert strings to lowercase
     name = name.lower()
 
-    # Copy the word list to avoid side effects
-    word_list = WORD_LIST.copy()
+    # Import the word list from a JSON-formatted file
+    word_file = open("spooky_words.json", 'r')
+    word_list = json.load(word_file)
+    word_file.close()
 
     # Randomly shuffle the spooky words for variety,
     # then sort by length to encourage longer substitutions
@@ -191,27 +203,22 @@ def spookify(name):
     return string.capwords(new_name)
 
 
-# Import the word list from a JSON-formatted file
-WORD_FILE = open("spooky_words.json", 'r')
-WORD_LIST = json.load(WORD_FILE)
-
 # Don't run automatically if imported as a module
 if __name__ == '__main__':
-
-    NAME = ""
 
     # Get a name from the command line
     if sys.argv[1:]:
         NAME = ' '.join(sys.argv[1:])
         print(spookify(NAME))
     else:
+        NAME = ""
         # If no name is provided, act as a repl
         while NAME.lower() not in ['exit', 'quit']:
-            # try/except to elegantly handle ^C
+            # try/except to elegantly handle ^C and ^D
             try:
                 NAME = input("Enter a name (or 'exit') > ")
                 print(spookify(NAME))
-            except KeyboardInterrupt:
+            except (KeyboardInterrupt, EOFError):
                 break
 
 # eof
