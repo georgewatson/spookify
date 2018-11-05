@@ -22,7 +22,6 @@ Dependencies:
     regex
     string
     sys
-
 - Third-party:
     jellyfish <https://pypi.org/project/jellyfish/>
         Available through pip (pip install jellyfish)
@@ -108,6 +107,8 @@ def is_anagram(string1, string2):
     Checks whether two strings contain the same characters
     Returns True if so, else False
     """
+    # This function is no longer used, but is retained anyway
+
     # Strings of different lengths can't be anagrams
     # so we might as well avoid sorting them
     if len(string1) != len(string2):
@@ -161,6 +162,9 @@ def score_substitution(word_part, possible_sub):
             (the number of insertions, deletions, substitutions &
             transpositions, divided by the length of the substitution)
     """
+    # TODO: Consider integrating a phonetic element
+    # (jellyfish provides several)
+
     # If the words are the same, no substitution is needed
     # Avoid expensive operations
     if possible_sub == word_part:
