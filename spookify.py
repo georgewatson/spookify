@@ -31,17 +31,12 @@ Provides the following functions:
     spookify(name)*
         The main function
         Returns a spookified Halloween version of the string 'name'
-
     best_substitution(word, possible_subs)*
         Performs the best substitution of a member of possible_subs into word
-    is_anagram(string1, string2)
-        Determines whether two strings contain the exact same characters
-    levenshtein(string1, string2)
-        Calculates the Levenshtein distance between two strings
     score_substitution(word_part, possible_sub)
         Scores the desirability of replacing word_part with possible_sub
 
-    (Functions marked * include randomness)
+    (Functions marked * include random elements)
 
 Global variables:
     SPOOKY_WORDS
@@ -104,56 +99,6 @@ def best_substitution(word, possible_subs):
     return word
 
 
-def is_anagram(string1, string2):
-    """
-    Checks whether two strings contain the same characters
-    Returns True if so, else False
-    """
-    # This function is no longer used, but is retained anyway
-
-    # Strings of different lengths can't be anagrams
-    # so we might as well avoid sorting them
-    if len(string1) != len(string2):
-        return False
-
-    return sorted(string1) == sorted(string2)
-
-
-def levenshtein(string1, string2):
-    """
-    Calculates the Levenshtein distance between two strings
-    This is the minimum number of single-character changes (insertions,
-    deletions, and substitutions) required to transform one string into the
-    other.
-    See <https://en.wikipedia.org/wiki/Levenshtein_distance>
-    """
-    # This function is no longer used, but is retained anyway
-
-    # Only two rows of the matrix are actually necessary
-    # Fill in prev_row with the distance from an empty string1 (the length)
-    prev_row = range(len(string2) + 1)
-    # Pad this_row to the correct length with Nones
-    this_row = [None] * (len(string2) + 1)
-
-    # Calculate distances from previous row
-    for i, char1 in enumerate(string1):
-        # First element is empty string2, so use length again
-        this_row[0] = i + 1
-
-        # Calculate the minimum cost
-        for j, char2 in enumerate(string2):
-            this_row[j+1] = min(this_row[j] + 1,  # Insertions
-                                prev_row[j+1] + 1,  # Deletions
-                                # Substitutions
-                                prev_row[j] + (0 if char1 == char2 else 1))
-
-        # Move down a row and repeat
-        prev_row = this_row.copy()
-
-    # Result is the last element of the matrix
-    return this_row[-1]
-
-
 def score_substitution(word_part, possible_sub):
     """
     Determines the score of a substitution (lower is better)
@@ -193,6 +138,8 @@ def spookify(name, list_type='spooky'):
 
     # Import the word list from a JSON-formatted file
     # If no file with that name exists, default to spooky
+    # IO makes this technically impure, but really how is this any different
+    # from just declaring the lists inside the function?
     filename = os.path.join(
         sys.path[0], 'wordlists', '.'.join([list_type, 'json']))
     if os.path.isfile(filename):
