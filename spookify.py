@@ -114,11 +114,10 @@ def levenshtein(string1, string2):
     See <https://en.wikipedia.org/wiki/Levenshtein_distance>
     """
     # Only two rows of the matrix are actually necessary
-    prev_row = [None] * (len(string2) + 1)
-    this_row = [None] * (len(string2) + 1)
-
     # Fill in prev_row with the distance from an empty string1 (the length)
-    prev_row = range(len(prev_row))
+    prev_row = range(len(string2) + 1)
+    # Pad this_row to the correct length with Nones
+    this_row = [None] * (len(string2) + 1)
 
     # Calculate distances from previous row
     for i, char1 in enumerate(string1):
@@ -193,7 +192,7 @@ def spookify(name):
 
 
 # Import the word list from a JSON-formatted file
-WORD_FILE = open("spooky_words.json", 'w')
+WORD_FILE = open("spooky_words.json", 'r')
 WORD_LIST = json.load(WORD_FILE)
 
 # Don't run automatically if imported as a module
