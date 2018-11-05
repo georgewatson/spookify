@@ -47,6 +47,7 @@ However, Spookify is not at present packaged as a formal module and is provided
 as-is without any guarantee of safety or fitness for purpose.
 """
 
+import json
 import random
 import string
 import sys
@@ -164,152 +165,11 @@ def score_substitution(word_part, possible_sub):
     return levenshtein(possible_sub, word_part) / len(possible_sub)
 
 
-# A list of spooky words for potential substitutions
-SPOOKY_WORDS = ["halloween",
-                "banshee", "banshees",
-                "bat", "bats",
-                "beast", "beastly", "beasts",
-                "bite", "bites", "bitten",
-                "blackcat", "blackcats",
-                "bleed", "bleeding",
-                "blood", "bloody", "blooded", "bloodcurdling",
-                "bogeyman", "boogeyman",
-                "bone", "bones", "bonechilling", "bony",
-                # "boo",
-                "brains",
-                "broom", "broomstick", "brooms", "broomsticks",
-                "cackle", "cackling",
-                "cadaver", "cadavers",
-                "candle", "candles",
-                "candy", "chocolate",
-                "casper",
-                "cauldron", "cauldrons",
-                "cemetery", "cemeteries",
-                "chill", "chills", "chilling",
-                "chocolate",
-                "clown",
-                "cobweb", "cobwebs",
-                "coffin", "coffins",
-                "corpse", "corpses", "corpselike",
-                "costume", "costumed", "costumes",
-                "creature", "creatures",
-                "creep", "creepy", "creeps", "creeping", "creeper",
-                "crow", "crows",
-                "crypt",
-                "dark", "darkness",
-                "dead", "death", "deathly", "deadly",
-                "demon", "demons", "demonic", "dementor", "dementors",
-                "demented",
-                "devil", "devils", "devilish",
-                "disguise", "disguised", "disguises",
-                "doom", "doomed",
-                "dracula",
-                "dread", "dreadful", "dreaded",
-                "dying",  # "die",
-                "eerie",
-                "evil",
-                "eyeball", "eyeballs",
-                "fang", "fangs",
-                "fear", "fearful",
-                "frankenstein",
-                "fright", "frighten", "frightening", "frightened", "frightful",
-                "fullmoon",
-                "ghast", "ghasts", "ghastly",
-                "ghost", "ghosts", "ghostly",
-                "ghoul", "ghouls", "ghoulish",
-                "gore", "gory", "gored",
-                "grave", "gravestone", "graves", "gravestones", "graveyard",
-                "graveyards",
-                "grim", "grimreaper",
-                "grisly",
-                "gruesome",
-                "guts",
-                "hairraising",
-                "hallow", "hallows",
-                "haunt", "haunted", "haunting", "hauntedhouse",
-                "headless",
-                "headstone", "headstones",
-                "hearse", "hearses",
-                "hell", "hellish", "hellhound", "hellcat",
-                "hide", "hiding",
-                "horror", "horrific", "horrify", "horrifying", "horrible",
-                "howl", "howling",
-                "intestines",
-                "jackolantern",
-                "lantern",
-                "lightning",
-                "livingdead",
-                "macabre",
-                "mausoleum", "mausoleums",
-                "midnight",
-                "monster", "monsters", "monstrous",
-                "moonlight", "moonlit",  # "moon",
-                "morbid",
-                "mummy",
-                "night", "nightmare", "nighttime",
-                "noose",
-                "occult",
-                "october",
-                "ogre", "ogres",
-                "ominous",
-                "owl",
-                "petrify", "petrified", "petrifying",
-                "phantom", "phantoms", "phantasm", "phantasms",
-                "pitchfork",
-                "poltergeist", "poltergeists",
-                "possessed",
-                "potion", "potions",
-                "pumpkin", "pumpkins",
-                "raven", "ravens",
-                "reaper",
-                "repulsive", "repulsed",
-                "revolting", "revolted",
-                "risen",
-                "scare", "scary", "scared", "scarecrow",
-                "scream", "screams", "screaming",
-                "sever", "severed",
-                "shadow", "shadows", "shadowy",
-                "shock", "shocked", "shocking",
-                "skeleton", "skeletons", "skeletal",
-                "skull", "skulls",
-                "sneak", "sneaky",
-                "sorceror", "sorceress", "sorcerors", "sorceresses",
-                "specter", "spectre", "specters", "spectres", "spectral",
-                "spider", "spiderweb", "spiders", "spiderwebs",
-                "spinechilling",
-                "spirit", "spirits",
-                "spook", "spooky", "spooks", "spooked",
-                "startling", "startled", "startle",
-                "supernatural",
-                "sweets",
-                "thirteen",
-                "terror", "terrible", "terrifying", "terrified",
-                "thrill", "thrilling",
-                "thunder",
-                "tomb", "tombstone", "tombs", "tombstones",
-                "trembling", "tremble",
-                "trick", "treat", "trickortreat", "tricks", "treats",
-                "troll", "trolls",
-                "undead", "undying",
-                "unearthly",
-                "unnerving", "unnerved",
-                "vampire", "vampires", "vampiric",
-                "warlock", "warlocks",
-                "web", "webs",
-                "weird",
-                "werewolf", "werewolves", "wolf", "wolves", "wolfman",
-                "wicked",
-                "witch", "witches", "witchcraft", "witchy",
-                "wizard", "wizards", "wizardry",
-                "wound", "wounds", "wounded",
-                "wraith", "wraiths",
-                "zombie", "zombies"]
-
-
 def spookify(name):
     """
     Spookify
     Generates a spooky version of a provided string, intended for names.
+    This acts as the main function for the 'spookify' module.
     See 'spookify' module docstring for more info.
     """
 
@@ -317,7 +177,7 @@ def spookify(name):
     name = name.lower()
 
     # Copy the word list to avoid side effects
-    word_list = SPOOKY_WORDS.copy()
+    word_list = WORD_LIST.copy()
 
     # Randomly shuffle the spooky words for variety,
     # then sort by length to encourage longer substitutions
@@ -332,8 +192,13 @@ def spookify(name):
     return string.capwords(new_name)
 
 
+# Import the word list from a JSON-formatted file
+WORD_FILE = open("spooky_words.json", 'w')
+WORD_LIST = json.load(WORD_FILE)
+
 # Don't run automatically if imported as a module
 if __name__ == '__main__':
+
     # Get a name from the command line, or ask for one
     if sys.argv[1:]:
         NAME = ' '.join(sys.argv[1:])
