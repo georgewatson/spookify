@@ -1,6 +1,8 @@
 # spookify
 Spooky Halloween name generator
 
+[![PyPI version](https://badge.fury.io/py/spookify.svg)](https://badge.fury.io/py/spookify)
+
 Also supports a limited festive dictionary
 
 ## Installation
@@ -23,6 +25,10 @@ Once installed through pip, run using
 If no name is provided on the command line, the script will run in REPL mode,
 allowing many names to be generated in a single session.
 This also allows the selection of alternative dictionaries.
+
+Available dictionaries:
+* `spooky` (default)
+* `festive`
 
 ## Examples:
 * George Watson ⇒ Ge-ogre Bats-on
