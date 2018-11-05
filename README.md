@@ -1,10 +1,7 @@
 # spookify
 Spooky Halloween name generator
 
-`./spookify.py <name>`
-
-Feel free to suggest additions to the dictionary or improvements to the
-algorithm.
+Also supports a limited festive dictionary
 
 Non-standard dependencies:
 * [jellyfish](https://github.com/jamesturk/jellyfish)
