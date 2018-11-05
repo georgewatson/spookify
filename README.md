@@ -1,7 +1,7 @@
+[![PyPI version](https://badge.fury.io/py/spookify.svg)](https://badge.fury.io/py/spookify)
+
 # spookify
 Spooky Halloween name generator
-
-[![PyPI version](https://badge.fury.io/py/spookify.svg)](https://badge.fury.io/py/spookify)
 
 Also supports a limited festive dictionary
 
