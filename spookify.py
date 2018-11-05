@@ -177,22 +177,29 @@ def score_substitution(word_part, possible_sub):
         possible_sub, word_part) / len(possible_sub)
 
 
-def spookify(name):
+def spookify(name, list_type='spooky'):
     """
     Spookify
     Generates a spooky version of a provided string, intended for names.
     This acts as the main function for the 'spookify' module.
     See 'spookify' module docstring for more info.
 
-    Note: This function takes input from the file 'spooky_words.json', and
-    has random elements.
+    This function takes input from a json file in the 'wordlists' directory,
+    and has random elements.
     """
 
     # Convert strings to lowercase
     name = name.lower()
 
     # Import the word list from a JSON-formatted file
-    word_file = open(os.path.join(sys.path[0], "spooky_words.json"), 'r')
+    # If no file with that name exists, default to spooky
+    filename = os.path.join(
+        sys.path[0], 'wordlists', '.'.join([list_type, 'json']))
+    if os.path.isfile(filename):
+        word_file = open(filename, 'r')
+    else:
+        word_file = open(os.path.join(
+            sys.path[0], 'wordlists', 'spooky.json'), 'r')
     word_list = json.load(word_file)
     word_file.close()
 
@@ -212,6 +219,7 @@ def spookify(name):
 # Don't run automatically if imported as a module
 if __name__ == '__main__':
 
+    # TODO: Allow the user to select a word list
     # Get a name from the command line
     if sys.argv[1:]:
         NAME = ' '.join(sys.argv[1:])
@@ -219,11 +227,12 @@ if __name__ == '__main__':
     else:
         NAME = ""
         # If no name is provided, act as a repl
+        LIST_TYPE = input("Select a word list (default: spooky) > ")
         while NAME.lower() not in ['exit', 'quit']:
             # try/except to elegantly handle ^C and ^D
             try:
                 NAME = input("Enter a name (or 'exit') > ")
-                print(spookify(NAME))
+                print(spookify(NAME, list_type=LIST_TYPE))
             except (KeyboardInterrupt, EOFError):
                 break
 
