@@ -3,9 +3,26 @@ Spooky Halloween name generator
 
 Also supports a limited festive dictionary
 
+## Installation
+
+This project is available [on PyPI](https://pypi.org/project/spookify/);
+install using
+* `pip install spookify`
+
+Or clone this repo and build it yourself, if you prefer.
+
 Non-standard dependencies:
 * [jellyfish](https://github.com/jamesturk/jellyfish)
   `pip install jellyfish`
+
+## Usage
+
+Once installed through pip, run using
+* `python3 -m spookify [name]`
+
+If no name is provided on the command line, the script will run in REPL mode,
+allowing many names to be generated in a single session.
+This also allows the selection of alternative dictionaries.
 
 ## Examples:
 * George Watson ⇒ Ge-ogre Bats-on
