@@ -6,6 +6,10 @@ Spooky Halloween name generator
 Feel free to suggest additions to the dictionary or improvements to the
 algorithm.
 
+Non-standard dependencies:
+* [pyxDamerauLevenshtein](https://github.com/gfairchild/pyxDamerauLevenshtein)
+  `pip install pyxDamerauLevenshtein`
+
 ## Examples:
 * George Watson ⇒ G-eerie Bats-on
 * Dave Jones ⇒ Grave Bones
