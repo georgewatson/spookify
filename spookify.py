@@ -18,6 +18,7 @@ something.
 Dependencies:
 - Standard:
     json
+    os
     random
     regex
     string
@@ -55,6 +56,7 @@ as-is without any guarantee of safety or fitness for purpose.
 # pylint: disable=c-extension-no-member
 
 import json
+import os
 import random
 import string
 import sys
@@ -190,7 +192,7 @@ def spookify(name):
     name = name.lower()
 
     # Import the word list from a JSON-formatted file
-    word_file = open("spooky_words.json", 'r')
+    word_file = open(os.path.join(sys.path[0], "spooky_words.json"), 'r')
     word_list = json.load(word_file)
     word_file.close()
 
