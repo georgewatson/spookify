@@ -35,12 +35,7 @@ Provides the following functions:
         Performs the best substitution of a member of possible_subs into word
     score_substitution(word_part, possible_sub)
         Scores the desirability of replacing word_part with possible_sub
-
     (Functions marked * include random elements)
-
-Global variables:
-    SPOOKY_WORDS
-        A list of spooky words
 
 The above components are available for use in other code if imported correctly,
 and should have no side effects.
