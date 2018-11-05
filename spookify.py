@@ -140,15 +140,13 @@ def spookify(name, list_type='spooky'):
     # If no file with that name exists, default to spooky
     # IO makes this technically impure, but really how is this any different
     # from just declaring the lists inside the function?
-    filename = os.path.join(
-        sys.path[0], 'wordlists', '.'.join([list_type, 'json']))
-    if os.path.isfile(filename):
-        word_file = open(filename, 'r')
-    else:
-        word_file = open(os.path.join(
-            sys.path[0], 'wordlists', 'spooky.json'), 'r')
-    word_list = json.load(word_file)
-    word_file.close()
+    filename = os.path.join(sys.path[0],
+                            'wordlists',
+                            '.'.join([list_type, 'json']))
+    if not os.path.isfile(filename):
+        filename = os.path.join(sys.path[0], 'wordlists', 'spooky.json')
+    with open(filename, 'r') as word_file:
+        word_list = json.load(word_file)
 
     # Randomly shuffle the spooky words for variety,
     # then sort by length to encourage longer substitutions
