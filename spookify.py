@@ -198,12 +198,20 @@ WORD_LIST = json.load(WORD_FILE)
 # Don't run automatically if imported as a module
 if __name__ == '__main__':
 
-    # Get a name from the command line, or ask for one
+    NAME = ""
+
+    # Get a name from the command line
     if sys.argv[1:]:
         NAME = ' '.join(sys.argv[1:])
+        print(spookify(NAME))
     else:
-        NAME = input("Enter your name: ")
-
-    print(spookify(NAME))
+        # If no name is provided, act as a repl
+        while NAME.lower() not in ['exit', 'quit']:
+            # try/except to elegantly handle ^C
+            try:
+                NAME = input("Enter a name (or 'exit') > ")
+                print(spookify(NAME))
+            except KeyboardInterrupt:
+                break
 
 # eof
