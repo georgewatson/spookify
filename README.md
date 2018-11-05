@@ -7,17 +7,17 @@ Feel free to suggest additions to the dictionary or improvements to the
 algorithm.
 
 Non-standard dependencies:
-* [pyxDamerauLevenshtein](https://github.com/gfairchild/pyxDamerauLevenshtein)
-  `pip install pyxDamerauLevenshtein`
+* [jellyfish](https://github.com/jamesturk/jellyfish)
+  `pip install jellyfish`
 
 ## Examples:
-* George Watson ⇒ G-eerie Bats-on
+* George Watson ⇒ Ge-ogre Bats-on
 * Dave Jones ⇒ Grave Bones
 * Richard Stallman ⇒ Witch-ard Skull-man
 * Donald Trump ⇒ Demon-ald Grim-p
 * Theresa May ⇒ T-hearse Mummy
-* Albus Dumbledore ⇒ Al-guts Dumble-gore
+* Albus Dumbledore ⇒ Al-bats Dum-bleed-ore
 * Engineering and Physical Sciences Research Council ⇒ Engin-eerie-g And
-  Phy-spectral S-risen-ces Re-fear-ch Clown-cil
+  Phy-spectral Scare-nces Re-fear-ch Wound-il
 
 It's not very good.

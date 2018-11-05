@@ -24,8 +24,8 @@ Dependencies:
     sys
 
 - Third-party:
-    pyxdameraulevenshtein <https://pypi.org/project/pyxDamerauLevenshtein/>
-        Available through pip (pip install pyxDamerauLevenshtein)
+    jellyfish <https://pypi.org/project/jellyfish/>
+        Available through pip (pip install jellyfish)
 
 Provides the following functions:
     spookify(name)*
@@ -60,7 +60,7 @@ import random
 import string
 import sys
 import regex as re
-import pyxdameraulevenshtein
+import jellyfish
 
 
 def best_substitution(word, possible_subs):
@@ -156,7 +156,7 @@ def score_substitution(word_part, possible_sub):
     Determines the score of a substitution (lower is better)
     Criteria:
         Identical words score 0
-        Substitutions are given a score equal to their normalize
+        Substitutions are given a score equal to their normalized
             Damerau-Levenshtein distance
             (the number of insertions, deletions, substitutions &
             transpositions, divided by the length of the substitution)
@@ -167,8 +167,8 @@ def score_substitution(word_part, possible_sub):
         return 0
 
     # Otherwise, check the normalised Damerau-Levenshtein distance
-    return pyxdameraulevenshtein.normalized_damerau_levenshtein_distance(
-        possible_sub, word_part)
+    return jellyfish.damerau_levenshtein_distance(
+        possible_sub, word_part) / len(possible_sub)
 
 
 def spookify(name):
