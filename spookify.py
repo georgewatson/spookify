@@ -219,7 +219,8 @@ def spookify(name, list_type='spooky'):
 # Don't run automatically if imported as a module
 if __name__ == '__main__':
 
-    # TODO: Allow the user to select a word list
+    # TODO: Make wordlist selection a flag
+
     # Get a name from the command line
     if sys.argv[1:]:
         NAME = ' '.join(sys.argv[1:])
