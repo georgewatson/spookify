@@ -44,16 +44,17 @@ as-is without any guarantee of safety or fitness for purpose.
 import sys
 from . import spookify
 
-# TODO: Make wordlist selection a flag
-
 # Get a name from the command line
 if sys.argv[1:]:
     NAME = ' '.join(sys.argv[1:])
     print(spookify(NAME))
 else:
-    NAME = ""
     # If no name is provided, act as a repl
-    LIST_TYPE = input("Select a word list (default: spooky) > ")
+    NAME = ""
+    LIST_TYPE = ''
+    VALID_TYPES = ['festive', 'spooky']
+    while LIST_TYPE not in VALID_TYPES:
+        LIST_TYPE = input("Select a word list (default: spooky) > ")
     while NAME.lower() not in ['exit', 'quit']:
         # try/except to elegantly handle ^C and ^D
         try:

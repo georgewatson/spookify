@@ -115,9 +115,6 @@ def score_substitution(word_part, possible_sub):
         word_part       Substring to maybe be replaced with 'possible_sub'
         possible_sub    The string with which 'word_part' may be replaced
     """
-    # TODO: Consider integrating a phonetic element
-    # (jellyfish provides several)
-
     # If the words are the same, no substitution is needed
     # Avoid expensive operations
     if possible_sub == word_part:
@@ -151,8 +148,6 @@ def spookify(name, list_type='spooky', seed=None):
 
     # Import the word list from a JSON-formatted file
     # If no file with that name exists, default to spooky
-    # IO makes this technically impure, but really how is this any different
-    # from just declaring the lists inside the function?
     filename = pkg_resources.resource_filename(
         'spookify', ''.join(['wordlists/', list_type, '.json']))
     if not os.path.isfile(filename):
@@ -163,7 +158,6 @@ def spookify(name, list_type='spooky', seed=None):
 
     # Randomly shuffle the spooky words for variety,
     # then sort by length to encourage longer substitutions
-    # Technically impure, but who cares?
     if seed:
         random.seed(seed)
     random.shuffle(word_list)

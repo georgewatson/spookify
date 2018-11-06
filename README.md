@@ -11,11 +11,14 @@ This project is available [on PyPI](https://pypi.org/project/spookify/);
 install using
 * `pip install spookify`
 
-Or clone this repo and build it yourself, if you prefer.
+Or clone [this repo](https://github.com/georgewatson/spookify) and build it
+yourself, if you prefer.
 
 Non-standard dependencies:
 * [jellyfish](https://github.com/jamesturk/jellyfish)
   `pip install jellyfish`
+* [regex](https://bitbucket.org/mrabarnett/mrab-regex)
+  `pip install regex`
 
 ## Usage
 
