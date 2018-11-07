@@ -49,7 +49,8 @@ else:
     LIST_TYPE = ''
     VALID_TYPES = ['festive', 'spooky']
     while LIST_TYPE not in VALID_TYPES:
-        LIST_TYPE = input("Select a word list (default: spooky) > ")
+        LIST_TYPE = input(
+            "Select a word list (default: spooky) > ") or 'spooky'
     while NAME.lower() not in ['exit', 'quit']:
         # try/except to elegantly handle ^C and ^D
         try:
