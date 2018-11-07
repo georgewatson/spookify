@@ -34,11 +34,6 @@ Provides the following functions:
     score_substitution(word_part, possible_sub)
         Scores the desirability of replacing word_part with possible_sub
     (Functions marked * include random elements)
-
-The above components are available for use in other code if imported correctly,
-and should have no side effects.
-However, Spookify is not at present packaged as a formal module and is provided
-as-is without any guarantee of safety or fitness for purpose.
 """
 
 import sys

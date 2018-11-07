@@ -34,11 +34,6 @@ Provides the following functions:
         Scores the desirability of replacing word_part with possible_sub
 (Functions marked * include pseudo-random elements; a seed may be defined if
 this is undesirable)
-
-The above components are available for use in other code if imported correctly,
-and should have no side effects.
-However, Spookify is not at present packaged as a formal module and is provided
-as-is without any guarantee of safety or fitness for purpose.
 """
 
 # pylint: disable=c-extension-no-member
@@ -76,9 +71,8 @@ def best_substitution(word, possible_subs, seed=None):
                   for i in range(len(word) - 2)
                   for j in range(i+2, len(word))]
 
-    # Sort by length to encourage longer substitutions
-    # By defining a seed, the order of the shuffled elements will be fixed,
-    # if purity is desired
+    # Shuffle elements, then sort by length to encourage longer substitutions
+    # By defining a seed, the order of the shuffled elements can be fixed
     if seed:
         random.seed(seed)
     random.shuffle(substrings)
