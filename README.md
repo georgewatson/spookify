@@ -28,6 +28,9 @@ mode, allowing many names to be generated in a single session.
 This also allows the selection of alternative dictionaries (see "Available
 dictionaries", below).
 
+If you don't wish to install the package through pip, spookify can be run
+directly by cloning this repo and running `spookify/__main__.py`.
+
 Spookify can also be imported for use in other Python scripts, in the typical
 fashion:
 * `import spookify [as ...]`

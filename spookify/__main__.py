@@ -6,38 +6,31 @@ Halloween name generator
 <https://github.com/georgewatson/spookify>
 
 George Watson, 2018
-Available under an MIT licence (see LICENSE)
+Available under an MIT licence
+(see LICENSE file, or https://opensource.org/licenses/MIT)
 
 Spookifies all words of 3 or more characters.
 To force a match for words shorter than 3 characters, append some dots or
 something.
 
-Dependencies:
+Dependencies (specific to this file):
 - Standard:
-    json
-    os
-    random
-    regex
-    string
     sys
-- Third-party:
-    jellyfish <https://pypi.org/project/jellyfish/>
-        Available through pip (pip install jellyfish)
-    pkg_resources
+- The remainder of the 'spookify' module (spookify/__init__.py)
+For additional dependencies, see __init__.py
 
-Provides the following functions:
-    spookify(name)*
-        The main function
-        Returns a spookified Halloween version of the string 'name'
-    best_substitution(word, possible_subs)*
-        Performs the best substitution of a member of possible_subs into word
-    score_substitution(word_part, possible_sub)
-        Scores the desirability of replacing word_part with possible_sub
-    (Functions marked * include random elements)
+This file is used to run spookify from the command line.
+To do this, type:
+    python3 -m spookify [name]
+If no name is provided, spookify will run in interactive mode.
+
+For information on using spookify functions in your own code, see __init__.py
+
+See README.md for more details.
 """
 
 import sys
-from . import spookify
+from __init__ import spookify
 
 # Get a name from the command line
 if sys.argv[1:]:

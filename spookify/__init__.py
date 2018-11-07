@@ -4,7 +4,8 @@ Halloween name generator
 <https://github.com/georgewatson/spookify>
 
 George Watson, 2018
-Available under an MIT licence (see LICENSE)
+Available under an MIT licence
+(see LICENSE file, or https://opensource.org/licenses/MIT)
 
 Spookifies all words of 3 or more characters.
 To force a match for words shorter than 3 characters, append some dots or
@@ -17,7 +18,7 @@ Dependencies:
     random
     regex
     string
-    sys
+    sys     (__main__.py only)
 - Third-party:
     jellyfish <https://pypi.org/project/jellyfish/>
         Available through pip (pip install jellyfish)
@@ -34,9 +35,11 @@ Provides the following functions:
         Scores the desirability of replacing word_part with possible_sub
 (Functions marked * include pseudo-random elements; a seed may be defined if
 this is undesirable)
-"""
 
-# pylint: disable=c-extension-no-member
+For information on how to run spookify interactively, see __main__.py
+
+See README.md for more details.
+"""
 
 import json
 import os
