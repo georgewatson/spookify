@@ -143,10 +143,12 @@ def spookify(name, list_type='spooky', seed=None):
     # Import the word list from a JSON-formatted file
     # If no file with that name exists, default to spooky
     filename = pkg_resources.resource_filename(
-        'spookify', ''.join(['wordlists/', list_type.lower(), '.json']))
+        'spookify',
+        os.path.join('wordlists', ''.join([list_type.lower(), '.json'])))
     if not os.path.isfile(filename):
-        filename = pkg_resources.resource_filename('spookify',
-                                                   'wordlists/spooky.json')
+        filename = pkg_resources.resource_filename(
+            'spookify',
+            os.path.join('wordlists', 'spooky.json'))
     with open(filename, 'r') as word_file:
         word_list = json.load(word_file)
 
