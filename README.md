@@ -37,16 +37,20 @@ fashion:
 * `from spookify import [...]`
 
 This exposes the following functions:
-* `spookify.spookify(name[, list_type][, seed])`  
+* `spookify.spookify(name[, list_type][, shuffle])`  
   Returns a punned-upon version of the string `name`.  
   Possible values of `list_type` are listed under "Available dictionaries"
   below.
-* `spookify.best_substitution(word, possible_subs[, seed])`  
+* `spookify.best_substitution(word, possible_subs[, shuffle])`  
   Performs the best substitution of a member of the list `possible_subs` into
   `word`.
 * `spookify.score_substitution(word_part, possible_sub)`  
   Scores the desirability of replacing the string `word_part` with
   `possible_sub` (lower is better).
+
+Functions with pseudo-random elements all support a `shuffle` argument.
+By setting this to `False`, this can be disabled, resulting in a consistent
+return value.
 
 See the function docstrings for more details.
 

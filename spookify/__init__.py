@@ -25,16 +25,16 @@ Dependencies:
     pkg_resources
 
 Provides the following functions:
-    spookify(name, [list_type], [seed])*
+    spookify(name[, list_type][, shuffle])*
         The main function
         Returns a punned-upon version of the string 'name', using the selected
         wordlist; by default, spooky Halloween substitutions are used
-    best_substitution(word, possible_subs, [seed])*
+    best_substitution(word, possible_subs[, shuffle])*
         Performs the best substitution of a member of possible_subs into word
     score_substitution(word_part, possible_sub)
         Scores the desirability of replacing word_part with possible_sub
-(Functions marked * include pseudo-random elements; a seed may be defined if
-this is undesirable)
+(Functions marked * include pseudo-random elements, which may be disabled by
+setting shuffle=False if this is undesirable)
 
 For information on how to run spookify interactively, see __main__.py
 
@@ -50,19 +50,19 @@ import jellyfish
 import pkg_resources
 
 
-def best_substitution(word, possible_subs, seed=None):
+def best_substitution(word, possible_subs, shuffle=True):
     """
     Finds the best possible substitution in a given word,
     and returns the modified word
     In the case of a tie, modifications are chosen at random
 
-    Arguments:
-        word            A word upon which to pun
-        possible_subs   A list of words that may be inserted into 'word'
-        seed            (optional) A seed for the random number generator
+    Arguments (? indicates optional):
+        str   word          A word upon which to pun
+        [str] possible_subs A list of words that may be inserted into 'word'
+    ?   bool  shuffle       Should the lists be shuffled before sorting?
+                            Default: True
 
-    Note: The return value of this function may not be fixed if no seed is
-    defined
+    Note: The return value of this function may not be fixed if shuffle=True
     """
     # Skip short words
     ignored_words = ['and', 'for', 'the']
@@ -74,28 +74,27 @@ def best_substitution(word, possible_subs, seed=None):
                   for i in range(len(word) - 2)
                   for j in range(i+2, len(word))]
 
-    # Shuffle elements, then sort by length to encourage longer substitutions
-    # By defining a seed, the order of the shuffled elements can be fixed
-    if seed:
-        random.seed(seed)
-    random.shuffle(substrings)
-    substrings.sort(key=len, reverse=True)
+    # Shuffle elements if desired
+    if shuffle:
+        random.shuffle(substrings)
+        random.shuffle(possible_subs)
 
     # Find the best spooky substitution
+    # The lists are sorted by length to encourage longer substitutions
     best_sub = min([(name_part,
                      substitution,
                      score_substitution(name_part, substitution))
-                    for name_part in substrings
-                    for substitution in possible_subs],
+                    for name_part in sorted(substrings,
+                                            key=len,
+                                            reverse=True)
+                    for substitution in sorted(possible_subs,
+                                               key=len,
+                                               reverse=True)],
                    key=lambda t: t[2])
 
-    # Substitute the relevant substring, delimited by hyphens
-    word = word.replace(best_sub[0], "-"+best_sub[1]+"-")
-    # But remove the hyphens at word boundaries
-    word = re.sub(r'^-|-$', "", word)
-
-    # Return the result
-    return word
+    # Substitute the relevant substring, delimited by hyphens,
+    # but remove the hyphens at word boundaries
+    return re.sub(r'^-|-$', "", word.replace(best_sub[0], "-"+best_sub[1]+"-"))
 
 
 def score_substitution(word_part, possible_sub):
@@ -109,8 +108,8 @@ def score_substitution(word_part, possible_sub):
             transpositions, divided by the length of the substitution)
 
     Arguments:
-        word_part       Substring to maybe be replaced with 'possible_sub'
-        possible_sub    The string with which 'word_part' may be replaced
+        str word_part       Substring to maybe be replaced with 'possible_sub'
+        str possible_sub    The string with which 'word_part' may be replaced
     """
     # If the words are the same, no substitution is needed
     # Avoid expensive operations
@@ -122,21 +121,22 @@ def score_substitution(word_part, possible_sub):
         possible_sub, word_part) / len(possible_sub)
 
 
-def spookify(name, list_type='spooky', seed=None):
+def spookify(name, list_type='spooky', shuffle=True):
     """
     Spookify
     Generates a spooky version of a provided string, intended for names.
     This acts as the main function for the 'spookify' module.
     See 'spookify' module docstring for more info.
 
-    Arguments:
-        name        A name (or other string) on which to pun
-        list_type   (optional) The wordlist to use (default: spooky)
-                    <list_type>.json must exist in spookify/wordlists
-        seed        (optional) A seed for the random number generator
+    Arguments (? indicates optional):
+        str  name       A name (or other string) on which to pun
+    ?   str  list_type  The wordlist to use
+                        Default: 'spooky'
+                        <list_type>.json must exist in spookify/wordlists
+    ?   bool shuffle    Should the lists be shuffled?
+                        Default: True
 
-    Note: The return value of this function may not be fixed if no seed is
-    defined.
+    Note: The return value of this function may not be fixed if shuffle=True
     This function takes input from a json file stored in the package directory.
     """
 
@@ -155,17 +155,10 @@ def spookify(name, list_type='spooky', seed=None):
     with open(filename, 'r') as word_file:
         word_list = json.load(word_file)
 
-    # Randomly shuffle the spooky words for variety,
-    # then sort by length to encourage longer substitutions
-    if seed:
-        random.seed(seed)
-    random.shuffle(word_list)
-    word_list.sort(key=len, reverse=True)
-
     # Construct a new name by applying the best substitution to each word
-    new_name = " ".join([best_substitution(name_word, word_list, seed)
-                         for name_word in name.split()])
-
-    return string.capwords(new_name)
+    # Words are sorted by length to encourage longer substitutions
+    return string.capwords(" ".join(
+        [best_substitution(name_word, word_list, shuffle=shuffle)
+         for name_word in name.split()]))
 
 # eof
