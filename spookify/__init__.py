@@ -69,6 +69,9 @@ def best_substitution(word, possible_subs, shuffle=True):
     if len(word) < 3 or word in ignored_words:
         return word
 
+    # Copy the wordlist to avoid side-effects
+    substitutions = possible_subs.copy()
+
     # Get all substrings of length >= 3
     substrings = [word[i:j+1]
                   for i in range(len(word) - 2)
@@ -77,7 +80,7 @@ def best_substitution(word, possible_subs, shuffle=True):
     # Shuffle elements if desired
     if shuffle:
         random.shuffle(substrings)
-        random.shuffle(possible_subs)
+        random.shuffle(substitutions)
 
     # Find the best spooky substitution
     # The lists are sorted by length to encourage longer substitutions
@@ -87,7 +90,7 @@ def best_substitution(word, possible_subs, shuffle=True):
                     for name_part in sorted(substrings,
                                             key=len,
                                             reverse=True)
-                    for substitution in sorted(possible_subs,
+                    for substitution in sorted(substitutions,
                                                key=len,
                                                reverse=True)],
                    key=lambda t: t[2])
