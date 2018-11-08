@@ -140,9 +140,6 @@ def spookify(name, list_type='spooky', shuffle=True):
     This function takes input from a json file stored in the package directory.
     """
 
-    # Convert strings to lowercase
-    name = name.lower()
-
     # Import the word list from a JSON-formatted file
     # If no file with that name exists, default to spooky
     filename = pkg_resources.resource_filename(
@@ -159,6 +156,6 @@ def spookify(name, list_type='spooky', shuffle=True):
     # Words are sorted by length to encourage longer substitutions
     return string.capwords(" ".join(
         [best_substitution(name_word, word_list, shuffle=shuffle)
-         for name_word in name.split()]))
+         for name_word in name.lower().split()]))
 
 # eof
