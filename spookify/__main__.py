@@ -30,7 +30,7 @@ See README.md for more details.
 """
 
 import sys
-from __init__ import spookify
+from . import spookify
 
 # Get a name from the command line
 if sys.argv[1:]:
