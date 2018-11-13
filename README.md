@@ -44,7 +44,7 @@ This exposes the following functions:
 * `spookify.best_substitution(word, possible_subs[, shuffle])`  
   Performs the best substitution of a member of the list `possible_subs` into
   `word`.
-* `spookify.score_substitution(word_part, possible_sub)`  
+* `spookify.score_substitution(word_part, possible_sub[, vowels])`  
   Scores the desirability of replacing the string `word_part` with
   `possible_sub` (lower is better).
 
