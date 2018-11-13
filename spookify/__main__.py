@@ -32,13 +32,16 @@ See README.md for more details.
 import sys
 from . import spookify
 
-# Get a name from the command line.
+# If a name is provided as an argument,
+# process it
+# and print the result.
 if sys.argv[1:]:
     NAME = ' '.join(sys.argv[1:])
     print(spookify(NAME))
+
+# If no name is provided,
+# act as a REPL.
 else:
-    # If no name is provided,
-    # act as a repl.
     NAME = ""
     LIST_TYPE = ''
     VALID_TYPES = ['festive', 'spooky']
