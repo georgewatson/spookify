@@ -5,7 +5,7 @@ with open("README.md", 'r') as fh:
 
 setuptools.setup(
     name='spookify',
-    version='0.2.5.post1',
+    version='0.3.0',
     author='George Watson',
     author_email='george@georgewatson.me',
     description='Pun generator',
