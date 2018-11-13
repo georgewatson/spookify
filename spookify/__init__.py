@@ -100,28 +100,42 @@ def best_substitution(word, possible_subs, shuffle=True):
     return re.sub(r'^-|-$', "", word.replace(best_sub[0], "-"+best_sub[1]+"-"))
 
 
-def score_substitution(word_part, possible_sub):
+def score_substitution(word_part, possible_sub, vowels='aeiou'):
     """
-    Determines the score of a substitution (lower is better)
+    Determines the score of a substitution, between 0 and 2 (lower is better)
     Criteria:
         Identical words score 0
         Substitutions are given a score equal to their normalized
             Damerau-Levenshtein distance
             (the number of insertions, deletions, substitutions &
             transpositions, divided by the length of the substitution)
+            with a penalty of 1 point added if the vowels in word_part do not
+            form a substring of the vowels in possible_sub
 
     Arguments:
         str word_part       Substring to maybe be replaced with 'possible_sub'
         str possible_sub    The string with which 'word_part' may be replaced
+    ?   str vowels          Characters to consider as vowels
+                            Default: 'aeiou'
+                            Pass a falsey value to disable vowel matching
     """
     # If the words are the same, no substitution is needed
     # Avoid expensive operations
     if possible_sub == word_part:
         return 0
 
+    if vowels:
+        # Get the vowels in each string, in order
+        word_vowels, sub_vowels = [''.join([c for c in list(string)
+                                            if c in vowels])
+                                   for string in [word_part, possible_sub]]
+
     # Otherwise, check the normalised Damerau-Levenshtein distance
-    return jellyfish.damerau_levenshtein_distance(
-        possible_sub, word_part) / len(possible_sub)
+    # Add a 1-point penalty if the vowels don't align, so matching vowels are
+    # always better than other replacements
+    return jellyfish.damerau_levenshtein_distance(possible_sub, word_part) / \
+        len(possible_sub) + \
+        (1 if vowels and word_vowels not in sub_vowels else 0)
 
 
 def spookify(name, list_type='spooky', shuffle=True):
