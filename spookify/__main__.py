@@ -32,24 +32,30 @@ See README.md for more details.
 import sys
 from . import spookify
 
-# Get a name from the command line
+# Get a name from the command line.
 if sys.argv[1:]:
     NAME = ' '.join(sys.argv[1:])
     print(spookify(NAME))
 else:
-    # If no name is provided, act as a repl
+    # If no name is provided,
+    # act as a repl.
     NAME = ""
     LIST_TYPE = ''
     VALID_TYPES = ['festive', 'spooky']
-    while LIST_TYPE not in VALID_TYPES:
-        LIST_TYPE = input(
-            "Select a word list (default: spooky) > ").lower() or 'spooky'
-    while NAME.lower() not in ['exit', 'quit']:
-        # try/except to elegantly handle ^C and ^D
-        try:
+
+    try:
+        # Loop until we receive a valid input
+        while LIST_TYPE not in VALID_TYPES:
+            LIST_TYPE = input(
+                "Select a word list (default: spooky) > ").lower() or 'spooky'
+
+        # Keep asking for names
+        while NAME.lower() not in ['exit', 'quit']:
             NAME = input("Enter a name (or 'exit') > ")
             print(spookify(NAME, list_type=LIST_TYPE))
-        except (KeyboardInterrupt, EOFError):
-            break
+
+    # Handle interrupt signals gracefully
+    except (KeyboardInterrupt, EOFError):
+        sys.exit(0)
 
 # eof

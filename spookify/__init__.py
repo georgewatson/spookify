@@ -53,8 +53,8 @@ import pkg_resources
 def best_substitution(word, possible_subs, shuffle=True):
     """
     Finds the best possible substitution in a given word,
-    and returns the modified word
-    In the case of a tie, modifications are chosen at random
+    and returns the modified word.
+    In the case of a tie, modifications are chosen at random.
 
     Arguments (? indicates optional):
         str   word          A word upon which to pun
@@ -62,28 +62,27 @@ def best_substitution(word, possible_subs, shuffle=True):
     ?   bool  shuffle       Should the lists be shuffled before sorting?
                             Default: True
 
-    Note: The return value of this function may not be fixed if shuffle=True
+    Note: The return value of this function may not be fixed if shuffle=True.
     """
     # Skip short words
-    ignored_words = ['and', 'for', 'the']
-    if len(word) < 3 or word in ignored_words:
+    if len(word) < 3 or word in ['and', 'for', 'the']:
         return word
 
-    # Copy the wordlist to avoid side-effects
+    # Copy the wordlist to avoid side-effects.
     substitutions = possible_subs.copy()
 
-    # Get all substrings of length >= 3
+    # Get all substrings of length >= 3.
     substrings = [word[i:j+1]
                   for i in range(len(word) - 2)
                   for j in range(i+2, len(word))]
 
-    # Shuffle elements if desired
+    # Shuffle elements if desired.
     if shuffle:
         random.shuffle(substrings)
         random.shuffle(substitutions)
 
-    # Find the best spooky substitution
-    # The lists are sorted by length to encourage longer substitutions
+    # Find the best spooky substitution.
+    # The lists are sorted by length to encourage longer substitutions.
     best_sub = min([(name_part,
                      substitution,
                      score_substitution(name_part, substitution))
@@ -95,22 +94,23 @@ def best_substitution(word, possible_subs, shuffle=True):
                                                reverse=True)],
                    key=lambda t: t[2])
 
-    # Substitute the relevant substring, delimited by hyphens,
-    # but remove the hyphens at word boundaries
+    # Substitute the relevant substring,
+    # delimited by hyphens,
+    # but remove the hyphens at word boundaries.
     return re.sub(r'^-|-$', "", word.replace(best_sub[0], "-"+best_sub[1]+"-"))
 
 
 def score_substitution(word_part, possible_sub, vowels='aeiou'):
     """
-    Determines the score of a substitution, between 0 and 2 (lower is better)
+    Determines the score of a substitution, between 0 and 1 (lower is better)
     Criteria:
-        Identical words score 0
-        Substitutions are given a score equal to their normalized
-            Damerau-Levenshtein distance
-            (the number of insertions, deletions, substitutions &
-            transpositions, divided by the length of the substitution)
-            with a penalty of 1 point added if the vowels in word_part do not
-            form a substring of the vowels in possible_sub
+        Identical words score 0.
+        Substitutions are given a score equal to:
+            Half their normalized Damerau-Levenshtein distance
+                (the number of insertions, deletions, substitutions &
+                transpositions, divided by the length of the substitution),
+            plus a penalty of 0.5 points added if the vowels in word_part do
+                not form a substring of the vowels in possible_sub.
 
     Arguments:
         str word_part       Substring to maybe be replaced with 'possible_sub'
@@ -119,23 +119,19 @@ def score_substitution(word_part, possible_sub, vowels='aeiou'):
                             Default: 'aeiou'
                             Pass a falsey value to disable vowel matching
     """
-    # If the words are the same, no substitution is needed
-    # Avoid expensive operations
-    if possible_sub == word_part:
-        return 0
-
+    # If we care about vowels,
+    # get the vowels in each string, in order.
     if vowels:
-        # Get the vowels in each string, in order
         word_vowels, sub_vowels = [''.join([c for c in list(string)
                                             if c in vowels])
                                    for string in [word_part, possible_sub]]
 
-    # Otherwise, check the normalised Damerau-Levenshtein distance
-    # Add a 1-point penalty if the vowels don't align, so matching vowels are
-    # always better than other replacements
-    return jellyfish.damerau_levenshtein_distance(possible_sub, word_part) / \
-        len(possible_sub) + \
-        (1 if vowels and word_vowels not in sub_vowels else 0)
+    # Final score is
+    # half the normalised Damerau-Levenshtein distance,
+    # plus a half-point penalty if the vowels don't align.
+    return (jellyfish.damerau_levenshtein_distance(possible_sub, word_part) /
+            (2 * len(possible_sub)) +
+            (0.5 if vowels and word_vowels not in sub_vowels else 0))
 
 
 def spookify(name, list_type='spooky', shuffle=True):
@@ -153,12 +149,12 @@ def spookify(name, list_type='spooky', shuffle=True):
     ?   bool shuffle    Should the lists be shuffled?
                         Default: True
 
-    Note: The return value of this function may not be fixed if shuffle=True
+    Note: The return value of this function may not be fixed if shuffle=True.
     This function takes input from a json file stored in the package directory.
     """
 
-    # Import the word list from a JSON-formatted file
-    # If no file with that name exists, default to spooky
+    # Import the word list from a JSON-formatted file.
+    # If no file with that name exists, default to spooky.
     filename = pkg_resources.resource_filename(
         'spookify',
         os.path.join('wordlists', ''.join([list_type.lower(), '.json'])))
@@ -169,8 +165,9 @@ def spookify(name, list_type='spooky', shuffle=True):
     with open(filename, 'r') as word_file:
         word_list = json.load(word_file)
 
-    # Construct a new name by applying the best substitution to each word
-    # Words are sorted by length to encourage longer substitutions
+    # Construct a new name
+    # by applying the best substitution to each word.
+    # Words are sorted by length to encourage longer substitutions.
     return string.capwords(" ".join(
         [best_substitution(name_word, word_list, shuffle=shuffle)
          for name_word in name.lower().split()]))
