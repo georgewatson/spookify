@@ -54,7 +54,9 @@ def best_substitution(word, possible_subs, shuffle=True):
     """
     Finds the best possible substitution in a given word,
     and returns the modified word.
-    In the case of a tie, modifications are chosen at random.
+    Longer substitutions are preferred.
+    In the case of a tie, a substitution is chosen at random if shuffle=True;
+    otherwise, the first substitution wins.
 
     Arguments (? indicates optional):
         str   word          A word upon which to pun
@@ -100,7 +102,7 @@ def best_substitution(word, possible_subs, shuffle=True):
     return re.sub(r'^-|-$', "", word.replace(best_sub[0], "-"+best_sub[1]+"-"))
 
 
-def score_substitution(word_part, possible_sub, vowels='aeiou'):
+def score_substitution(word_part, possible_sub, vowels='aeiouy'):
     """
     Determines the score of a substitution, between 0 and 1 (lower is better)
     Criteria:
@@ -116,7 +118,7 @@ def score_substitution(word_part, possible_sub, vowels='aeiou'):
         str word_part       Substring to maybe be replaced with 'possible_sub'
         str possible_sub    The string with which 'word_part' may be replaced
     ?   str vowels          Characters to consider as vowels
-                            Default: 'aeiou'
+                            Default: 'aeiouy'
                             Pass a falsey value to disable vowel matching
     """
     # If we care about vowels,
