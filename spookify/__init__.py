@@ -45,9 +45,9 @@ import json
 import os
 import random
 import string
-import regex as re
-import jellyfish
 import pkg_resources
+import jellyfish
+import regex as re
 
 
 def best_substitution(word, possible_subs, shuffle=True):
@@ -70,9 +70,6 @@ def best_substitution(word, possible_subs, shuffle=True):
     if len(word) < 3 or word in ['and', 'for', 'the']:
         return word
 
-    # Copy the wordlist to avoid side-effects.
-    substitutions = possible_subs.copy()
-
     # Get all substrings of length >= 3.
     substrings = [word[i:j+1]
                   for i in range(len(word) - 2)
@@ -80,8 +77,10 @@ def best_substitution(word, possible_subs, shuffle=True):
 
     # Shuffle elements if desired.
     if shuffle:
-        random.shuffle(substrings)
-        random.shuffle(substitutions)
+        substrings = random.sample(substrings, len(substrings))
+        substitutions = random.sample(possible_subs, len(possible_subs))
+    else:
+        substitutions = possible_subs.copy()
 
     # Find the best spooky substitution.
     # The lists are sorted by length to encourage longer substitutions.
@@ -124,15 +123,15 @@ def score_substitution(word_part, possible_sub, vowels='aeiouy'):
     # If we care about vowels,
     # get the vowels in each string, in order.
     if vowels:
-        word_vowels, sub_vowels = [''.join([c for c in list(string)
+        word_vowels, sub_vowels = [''.join([c for c in list(letters)
                                             if c in vowels])
-                                   for string in [word_part, possible_sub]]
+                                   for letters in [word_part, possible_sub]]
 
     # Final score is
     # half the normalised Damerau-Levenshtein distance,
     # plus a half-point penalty if the vowels don't align.
     return (jellyfish.damerau_levenshtein_distance(possible_sub, word_part) /
-            (2 * len(possible_sub)) +
+            ((2 if vowels else 1) * len(possible_sub)) +
             (0.5 if vowels and word_vowels not in sub_vowels else 0))
 
 
