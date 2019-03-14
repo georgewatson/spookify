@@ -68,3 +68,23 @@ See the function docstrings for more details.
 | Donald Trump     | Demon-ald T-pumpkin   | Coal-d T-jumper   |
 | Theresa May      | T-eerie-sa Candy      | Cheers-a Mary     |
 | Ubuntu           | U-haunt-u             | U-fun-tu          |
+
+## Licensing
+This software is made available under an MIT License.
+See the `LICENSE` file for more information.
+
+This allows you to do whatever you want with the software,
+free of charge,
+including making modifications and distributing it commercially,
+provided you retain the contents of the (very short) `LICENSE` file
+in an appropriate place in all copies you distribute.
+This file includes an attribution to the authors of this repository.
+
+All potential contributors are expected to license their contributions under
+the same licence,
+and *may* add their names to the copyright notice in a pull request.
+
+Although no patents are, at present, claimed on this software,
+for the avoidance of doubt,
+the "without limitation" line in the license text is considered by the authors
+to be an explicit licence of any relevant patents.
