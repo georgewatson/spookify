@@ -8,19 +8,20 @@ Also supports a limited festive dictionary
 ## Installation
 This project is available [on PyPI](https://pypi.org/project/spookify/);
 install using
-* `pip install spookify`
+* `pip3 install spookify`
 
 Or clone [this repo](https://github.com/georgewatson/spookify) and build it
 yourself, if you prefer.
 
 Non-standard dependencies:
 * [jellyfish](https://github.com/jamesturk/jellyfish)
-  `pip install jellyfish`
+  `pip3 install jellyfish`
 * [regex](https://bitbucket.org/mrabarnett/mrab-regex)
-  `pip install regex`
+  `pip3 install regex`
 
 ## Usage
 Once installed through pip, run using
+* `spookify`, or
 * `python3 -m spookify [name]`
 
 If no name is provided on the command line, the script will run in interactive
