@@ -32,33 +32,44 @@ See README.md for more details.
 import sys
 from . import spookify
 
-# If a name is provided as an argument,
-# process it
-# and print the result.
-if sys.argv[1:]:
-    NAME = ' '.join(sys.argv[1:])
-    print(spookify(NAME))
 
-# If no name is provided,
-# act as a REPL.
-else:
-    NAME = ""
-    LIST_TYPE = ''
-    VALID_TYPES = ['festive', 'spooky']
+def main():
+    """
+    The main function
+    See module docstring
+    """
+    # If a name is provided as an argument,
+    # process it
+    # and print the result.
+    if sys.argv[1:]:
+        name = ' '.join(sys.argv[1:])
+        print(spookify(name))
 
-    try:
-        # Loop until we receive a valid input
-        while LIST_TYPE not in VALID_TYPES:
-            LIST_TYPE = input(
-                "Select a word list (default: spooky) > ").lower() or 'spooky'
+    # If no name is provided,
+    # act as a REPL.
+    else:
+        name = ""
+        list_type = ''
+        valid_types = ['festive', 'spooky']
 
-        # Keep asking for names
-        while NAME.lower() not in ['exit', 'quit']:
-            NAME = input("Enter a name (or 'exit') > ")
-            print(spookify(NAME, list_type=LIST_TYPE))
+        try:
+            # Loop until we receive a valid input
+            while list_type not in valid_types:
+                list_type = (input(
+                    "Select a word list (default: spooky) > ").lower()
+                             or 'spooky')
 
-    # Handle interrupt signals gracefully
-    except (KeyboardInterrupt, EOFError):
-        sys.exit(0)
+            # Keep asking for names
+            while name.lower() not in ['exit', 'quit']:
+                name = input("Enter a name (or 'exit') > ")
+                print(spookify(name, list_type=list_type))
+
+        # Handle interrupt signals gracefully
+        except (KeyboardInterrupt, EOFError):
+            sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
 
 # eof

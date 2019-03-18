@@ -5,7 +5,7 @@ with open("README.md", 'r') as fh:
 
 setuptools.setup(
     name='spookify',
-    version='0.3.1',
+    version='0.3.2',
     author='George Watson',
     author_email='george@georgewatson.me',
     description='Pun generator',
@@ -14,6 +14,10 @@ setuptools.setup(
     url='https://github.com/georgewatson/spookify',
     license='MIT',
     packages=setuptools.find_packages(),
+    entry_points={
+        "console_scripts": [
+            "spookify = spookify.__main__:main"]
+        },
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
