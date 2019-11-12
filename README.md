@@ -1,4 +1,9 @@
-[![PyPI version](https://badge.fury.io/py/spookify.svg)](https://badge.fury.io/py/spookify)
+![GitHub](https://img.shields.io/github/license/georgewatson/spookify)
+![PyPI](https://img.shields.io/pypi/v/spookify)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/georgewatson/spookify/latest)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spookify)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/spookify)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/spookify)
 
 # spookify
 Spooky Halloween name generator
